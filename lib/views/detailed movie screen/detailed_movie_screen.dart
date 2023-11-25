@@ -104,7 +104,7 @@ class _DetailedMovieScreenState extends State<DetailedMovieScreen> {
                               image: AssetImage(ConstantImages.crown)),
                           const SizedBox(width: 8),
                           Text(
-                            "${movieDetails.voteAverage! * 10}%",
+                            "${(movieDetails.voteAverage! * 10).toStringAsFixed(2)}%",
                             style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,
