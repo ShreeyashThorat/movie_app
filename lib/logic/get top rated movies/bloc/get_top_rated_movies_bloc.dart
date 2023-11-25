@@ -29,7 +29,9 @@ class GetTopRatedMoviesBloc
               : emit(topRatedMoviesLoaded.copyWith(
                   newMovies: topRatedMoviesLoaded.movies + moreMovies));
         }
-      } on Exception {
+      } catch (e, stacktrace) {
+        log(e.toString());
+        log(stacktrace.toString());
         return emit(const ErrorOccuredTopRatedMovies(
             errorMsg: "Oops, Something went wrong...!"));
       }

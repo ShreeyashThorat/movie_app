@@ -30,7 +30,9 @@ class GetNowPlayingMoviesBloc
                   newmovies: nowPlayingMoviesLoaded.movies + moreMovies,
                   loadMore: false));
         }
-      } on Exception {
+      } catch (e, stacktrace) {
+        log(e.toString());
+        log(stacktrace.toString());
         return emit(const ErrorOccuredNowPlayingMovies(
             errorMsg: "Oops, Something went wrong...!"));
       }

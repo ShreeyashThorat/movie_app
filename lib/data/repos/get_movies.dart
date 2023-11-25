@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:movie_app/utils/constant_data.dart';
 
@@ -18,7 +20,9 @@ class GetMovies {
       } else {
         throw Exception('Failed to fetch data from API');
       }
-    } catch (e) {
+    } catch (e, stacktrace) {
+      log(e.toString());
+      log(stacktrace.toString());
       rethrow;
     }
   }
@@ -35,7 +39,9 @@ class GetMovies {
       } else {
         throw Exception('Failed to fetch data from API');
       }
-    } catch (e) {
+    } catch (e, stacktrace) {
+      log(e.toString());
+      log(stacktrace.toString());
       rethrow;
     }
   }
