@@ -4,25 +4,24 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:movie_app/logic/get%20now%20playing%20movies/bloc/get_now_playing_movies_bloc.dart';
-import 'package:movie_app/utils/color_theme.dart';
-import 'package:movie_app/views/widgets/load_movies.dart';
-import 'package:movie_app/views/widgets/movie_container.dart';
+import 'package:movie_app/logic/get%20top%20rated%20movies/bloc/get_top_rated_movies_bloc.dart';
 import 'package:swipe_refresh/swipe_refresh.dart';
 
 import '../../common widgets/text_field.dart';
+import '../../utils/color_theme.dart';
+import '../widgets/load_movies.dart';
+import '../widgets/movie_container.dart';
 
-class NowPlayingScreen extends StatefulWidget {
-  const NowPlayingScreen({super.key});
+class TopRatedScreen extends StatefulWidget {
+  const TopRatedScreen({super.key});
 
   @override
-  State<NowPlayingScreen> createState() => _NowPlayingScreenState();
+  State<TopRatedScreen> createState() => _TopRatedScreenState();
 }
 
-class _NowPlayingScreenState extends State<NowPlayingScreen> {
+class _TopRatedScreenState extends State<TopRatedScreen> {
   TextEditingController searchController = TextEditingController();
-  final GetNowPlayingMoviesBloc getNowPlayingMoviesBloc =
-      GetNowPlayingMoviesBloc();
+  final GetTopRatedMoviesBloc getTopRatedMoviesBloc = GetTopRatedMoviesBloc();
   final scrollController = ScrollController();
   final _controller = StreamController<SwipeRefreshState>.broadcast();
   Stream<SwipeRefreshState> get _stream => _controller.stream;
@@ -30,7 +29,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
   @override
   void initState() {
     scrollController.addListener(onScroll);
-    getNowPlayingMoviesBloc.add(GetNowPlayingMovies());
+    getTopRatedMoviesBloc.add(GetTopRatedMovies());
     super.initState();
   }
 
@@ -39,14 +38,14 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
     scrollController
       ..removeListener(onScroll)
       ..dispose();
-    getNowPlayingMoviesBloc.close();
+    getTopRatedMoviesBloc.close();
     _controller.close();
     super.dispose();
   }
 
   void onScroll() {
     if (isBottom) {
-      getNowPlayingMoviesBloc.add(GetNowPlayingMovies());
+      getTopRatedMoviesBloc.add(GetTopRatedMovies());
     }
   }
 
@@ -54,12 +53,9 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
     if (!scrollController.hasClients) {
       return false;
     } else {
-      if (searchController.text.isEmpty) {
-        final maxScroll = scrollController.position.maxScrollExtent;
-        final currentScroll = scrollController.offset;
-        return currentScroll == maxScroll;
-      }
-      return false;
+      final maxScroll = scrollController.position.maxScrollExtent;
+      final currentScroll = scrollController.offset;
+      return currentScroll == maxScroll;
     }
   }
 
@@ -88,14 +84,14 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
             ),
           ),
           onChange: (val) {
-            getNowPlayingMoviesBloc.add(SearchNowPlayingMovie(movieName: val));
+            getTopRatedMoviesBloc.add(SearchTopRatedMovie(movieName: val));
           },
         ),
       ),
-      body: BlocBuilder<GetNowPlayingMoviesBloc, GetNowPlayingMoviesState>(
-        bloc: getNowPlayingMoviesBloc,
+      body: BlocBuilder<GetTopRatedMoviesBloc, GetTopRatedMoviesState>(
+        bloc: getTopRatedMoviesBloc,
         builder: (context, state) {
-          if (state is GetNowPlayingMoviesInitial) {
+          if (state is GetTopRatedMoviesInitial) {
             return ListView.builder(
                 itemCount: 5,
                 padding: EdgeInsets.symmetric(
@@ -106,7 +102,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                   return const LoadMovies();
                 });
           }
-          if (state is ErrorOccuredNowPlayingMovies) {
+          if (state is ErrorOccuredTopRatedMovies) {
             return Center(
               child: Text(
                 state.errorMsg,
@@ -117,10 +113,10 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
               ),
             );
           }
-          if (state is NowPlayingMoviesLoaded && state.movies.isEmpty) {
+          if (state is TopRatedMoviesLoaded && state.movies.isEmpty) {
             return const Center(
               child: Text(
-                "No More Movies To Show",
+                "No Movies To Show",
                 style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
@@ -128,7 +124,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
               ),
             );
           }
-          if (state is NowPlayingMoviesLoaded && state.movies.isNotEmpty) {
+          if (state is TopRatedMoviesLoaded && state.movies.isNotEmpty) {
             return SwipeRefresh.cupertino(
                 stateStream: _stream,
                 onRefresh: _refresh,
@@ -156,8 +152,8 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                         : Dismissible(
                             key: UniqueKey(),
                             onDismissed: (direction) {
-                              getNowPlayingMoviesBloc
-                                  .add(DeleteNowPlayingMovie(index: index));
+                              getTopRatedMoviesBloc
+                                  .add(DeleteTopRatedMovie(index: index));
                               log("$direction");
                             },
                             child: MovieContainer(movie: state.movies[index]));
@@ -171,7 +167,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
   }
 
   Future<void> _refresh() async {
-    getNowPlayingMoviesBloc.add(RefreshNowPlayingMovie());
+    getTopRatedMoviesBloc.add(RefreshTopRatedMovie());
     _controller.sink.add(SwipeRefreshState.hidden);
   }
 }

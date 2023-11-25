@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/utils/color_theme.dart';
 import 'package:movie_app/utils/constant_images.dart';
+import 'package:movie_app/views/top%20rated/top_rated_screen.dart';
 
 import '../../logic/bottom nav/bottom_nav_cubit.dart';
 import '../now playing/now_playing_screen.dart';
@@ -23,9 +24,7 @@ class _BottomNavigatonState extends State<BottomNavigaton> {
           if (state.navbarItem == NavbarItem.nowPlaying) {
             return const NowPlayingScreen();
           } else if (state.navbarItem == NavbarItem.topRated) {
-            return const Center(
-              child: Text("Top Rated"),
-            );
+            return const TopRatedScreen();
           }
           return Container();
         },

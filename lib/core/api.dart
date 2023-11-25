@@ -1,8 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-const String baseUrl = "https://api.weatherapi.com/v1";
-const int isbeta = 0;
+const String baseUrl = "https://api.themoviedb.org/3/movie/";
 
 const Map<String, dynamic> defaultHEADERS = {
   "Content-Type": "application/json"
