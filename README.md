@@ -58,7 +58,7 @@ To use this application, follow these steps:
 1. Clone the repository to your local development environment:
 
    ```bash
-   git clone https://github.com/yourusername/your-repo.git
+   git clone https://github.com/ShreeyashThorat/movie_app
 2. Run the app on your preferred target platform using the following command:
    flutter run
 
